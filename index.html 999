@@ -1,0 +1,1713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --primary:#2563eb;
+  --primary-dark:#1d4ed8;
+  --bg:#f5f7fb;
+  --card:#fff;
+  --text:#172033;
+  --muted:#64748b;
+  --border:#e5e7eb;
+  --danger:#dc2626;
+  --success:#16a34a;
+  --warning:#d97706;
+}
+
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+
+/* LOGIN */
+#loginPage{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:linear-gradient(135deg,#eff6ff,#f8fafc);
+}
+
+.login-card{
+  width:100%;
+  max-width:420px;
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:32px;
+  box-shadow:0 15px 40px rgba(15,23,42,.10);
+}
+
+.logo{
+  width:64px;
+  height:64px;
+  border-radius:16px;
+  background:var(--primary);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:25px;
+  font-weight:bold;
+  margin:0 auto 18px;
+}
+
+.login-card h1{
+  text-align:center;
+  font-size:26px;
+  margin-bottom:7px;
+}
+
+.login-card .subtitle{
+  text-align:center;
+  color:var(--muted);
+  margin-bottom:25px;
+}
+
+.form-group{
+  margin-bottom:17px;
+}
+
+label{
+  display:block;
+  font-size:14px;
+  font-weight:600;
+  margin-bottom:7px;
+}
+
+input,select,textarea{
+  width:100%;
+  padding:12px 13px;
+  border:1px solid #d8dee8;
+  border-radius:10px;
+  outline:none;
+  font-size:14px;
+  background:#fff;
+}
+
+input:focus,select:focus,textarea:focus{
+  border-color:var(--primary);
+  box-shadow:0 0 0 3px rgba(37,99,235,.10);
+}
+
+.password-wrap{
+  position:relative;
+}
+
+.password-wrap input{
+  padding-right:48px;
+}
+
+.show-password{
+  position:absolute;
+  right:10px;
+  top:50%;
+  transform:translateY(-50%);
+  border:0;
+  background:none;
+  cursor:pointer;
+  font-size:18px;
+}
+
+.btn{
+  border:0;
+  border-radius:10px;
+  padding:12px 16px;
+  cursor:pointer;
+  font-weight:600;
+  font-size:14px;
+}
+
+.btn-primary{
+  width:100%;
+  color:#fff;
+  background:var(--primary);
+}
+
+.btn-primary:hover{background:var(--primary-dark)}
+
+.login-error{
+  display:none;
+  background:#fef2f2;
+  color:#b91c1c;
+  border:1px solid #fecaca;
+  padding:11px;
+  border-radius:9px;
+  margin-bottom:15px;
+  font-size:13px;
+}
+
+.security-warning{
+  margin-top:18px;
+  padding:11px;
+  background:#fffbeb;
+  border:1px solid #fde68a;
+  color:#92400e;
+  border-radius:9px;
+  font-size:12px;
+}
+
+/* APP */
+#app{
+  display:none;
+  min-height:100vh;
+}
+
+.sidebar{
+  position:fixed;
+  left:0;
+  top:0;
+  bottom:0;
+  width:250px;
+  background:#111827;
+  color:#fff;
+  overflow-y:auto;
+  z-index:1000;
+}
+
+.sidebar-header{
+  padding:20px;
+  font-size:19px;
+  font-weight:bold;
+  border-bottom:1px solid #263244;
+}
+
+.nav-section{
+  padding:12px 14px 5px;
+  color:#94a3b8;
+  font-size:11px;
+  text-transform:uppercase;
+}
+
+.nav-item{
+  padding:11px 17px;
+  margin:3px 10px;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:14px;
+}
+
+.nav-item:hover,
+.nav-item.active{
+  background:#1d4ed8;
+}
+
+.main{
+  margin-left:250px;
+  min-height:100vh;
+}
+
+.header{
+  height:68px;
+  background:#fff;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 24px;
+  position:sticky;
+  top:0;
+  z-index:900;
+}
+
+.header-left{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+
+.menu-btn{
+  display:none;
+  border:0;
+  background:none;
+  font-size:23px;
+  cursor:pointer;
+}
+
+.profile{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.avatar{
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  background:#dbeafe;
+  color:#1d4ed8;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:bold;
+}
+
+.content{
+  padding:24px;
+}
+
+.page{
+  display:none;
+}
+
+.page.active{
+  display:block;
+}
+
+.page-title{
+  font-size:24px;
+  margin-bottom:20px;
+}
+
+/* STATS */
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:16px;
+  margin-bottom:22px;
+}
+
+.stat-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:18px;
+}
+
+.stat-label{
+  color:var(--muted);
+  font-size:13px;
+  margin-bottom:9px;
+}
+
+.stat-value{
+  font-size:24px;
+  font-weight:700;
+}
+
+/* GRID */
+.grid-2{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px;
+}
+
+.card{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:20px;
+  margin-bottom:18px;
+}
+
+.card h3{
+  margin-bottom:15px;
+}
+
+/* TABLE */
+.table-wrap{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:14px;
+  overflow:auto;
+}
+
+.toolbar{
+  display:flex;
+  gap:10px;
+  justify-content:space-between;
+  margin-bottom:15px;
+}
+
+.toolbar-left,
+.toolbar-right{
+  display:flex;
+  gap:9px;
+}
+
+.btn-small{
+  padding:9px 13px;
+  border:1px solid var(--border);
+  background:#fff;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+.btn-blue{
+  background:var(--primary);
+  color:#fff;
+  border-color:var(--primary);
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:800px;
+}
+
+th,td{
+  padding:13px 15px;
+  border-bottom:1px solid var(--border);
+  text-align:left;
+  font-size:13px;
+}
+
+th{
+  background:#f8fafc;
+  color:#475569;
+}
+
+.badge{
+  display:inline-block;
+  padding:5px 9px;
+  border-radius:20px;
+  font-size:11px;
+  font-weight:bold;
+}
+
+.active-badge{background:#dcfce7;color:#166534}
+.pending-badge{background:#fef3c7;color:#92400e}
+.blocked-badge{background:#fee2e2;color:#991b1b}
+.completed-badge{background:#dbeafe;color:#1e40af}
+.paused-badge{background:#e2e8f0;color:#475569}
+
+/* QUICK ACTIONS */
+.quick-actions{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:10px;
+}
+
+.quick-actions button{
+  padding:13px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:#fff;
+  cursor:pointer;
+  font-weight:600;
+}
+
+.quick-actions button:hover{
+  border-color:var(--primary);
+  color:var(--primary);
+}
+
+/* FORM */
+.form-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+}
+
+.form-full{
+  grid-column:1/-1;
+}
+
+.actions{
+  display:flex;
+  gap:10px;
+  margin-top:18px;
+}
+
+.actions .btn{
+  width:auto;
+}
+
+.btn-success{
+  background:var(--success);
+  color:#fff;
+}
+
+.btn-danger{
+  background:var(--danger);
+  color:#fff;
+}
+
+/* TOAST */
+.toast{
+  position:fixed;
+  right:20px;
+  bottom:20px;
+  background:#111827;
+  color:#fff;
+  padding:13px 17px;
+  border-radius:9px;
+  display:none;
+  z-index:3000;
+}
+
+/* MOBILE */
+@media(max-width:900px){
+  .sidebar{
+    transform:translateX(-100%);
+    transition:.25s;
+  }
+
+  .sidebar.open{
+    transform:translateX(0);
+  }
+
+  .main{
+    margin-left:0;
+  }
+
+  .menu-btn{
+    display:block;
+  }
+
+  .stats{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .quick-actions{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .grid-2{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:600px){
+  .content{
+    padding:15px;
+  }
+
+  .stats{
+    grid-template-columns:1fr;
+  }
+
+  .form-grid{
+    grid-template-columns:1fr;
+  }
+
+  .toolbar{
+    flex-direction:column;
+  }
+
+  .header{
+    padding:0 15px;
+  }
+
+  .login-card{
+    padding:24px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<section id="loginPage">
+  <div class="login-card">
+
+    <div class="logo">A</div>
+
+    <h1>Admin Panel</h1>
+    <div class="subtitle">Secure Administrator Login</div>
+
+    <div id="loginError" class="login-error">
+      Invalid username or password.
+    </div>
+
+    <form id="loginForm">
+
+      <div class="form-group">
+        <label>Admin Username</label>
+        <input
+          id="username"
+          type="text"
+          autocomplete="username"
+          placeholder="Enter admin username"
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label>Password</label>
+
+        <div class="password-wrap">
+          <input
+            id="password"
+            type="password"
+            autocomplete="current-password"
+            placeholder="Enter password"
+            required
+          >
+
+          <button
+            type="button"
+            class="show-password"
+            onclick="togglePassword()"
+            aria-label="Show or hide password"
+          >👁</button>
+        </div>
+      </div>
+
+      <button id="loginButton" class="btn btn-primary" type="submit">
+        Login
+      </button>
+
+    </form>
+
+    <div class="security-warning">
+      ⚠ Security warning: Never share your administrator credentials.
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ADMIN APP -->
+<section id="app">
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar" class="sidebar">
+
+    <div class="sidebar-header">
+      ADMIN PANEL
+    </div>
+
+    <div class="nav-section">Main</div>
+
+    <div class="nav-item active" onclick="showPage('dashboard',this)">
+      📊 Dashboard
+    </div>
+
+    <div class="nav-item" onclick="showPage('users',this)">
+      👥 Users
+    </div>
+
+    <div class="nav-section">Management</div>
+
+    <div class="nav-item" onclick="showPage('tasks',this)">
+      ✅ Tasks
+    </div>
+
+    <div class="nav-item" onclick="showPage('ads',this)">
+      📢 Advertisements
+    </div>
+
+    <div class="nav-item" onclick="showPage('withdrawals',this)">
+      💸 Withdrawals
+    </div>
+
+    <div class="nav-item" onclick="showPage('transactions',this)">
+      💰 Wallet Transactions
+    </div>
+
+    <div class="nav-section">Telegram</div>
+
+    <div class="nav-item" onclick="showPage('telegramBot',this)">
+      🤖 Bot Settings
+    </div>
+
+    <div class="nav-item" onclick="showPage('miniApp',this)">
+      📱 Mini App
+    </div>
+
+    <div class="nav-item" onclick="showPage('telegramStatus',this)">
+      🔗 Connection Status
+    </div>
+
+    <div class="nav-section">Settings</div>
+
+    <div class="nav-item" onclick="showPage('withdrawalSettings',this)">
+      ⚙ Withdrawal Settings
+    </div>
+
+    <div class="nav-item" onclick="showPage('generalSettings',this)">
+      ⚙ General Settings
+    </div>
+
+    <div class="nav-item" onclick="showPage('account',this)">
+      👤 Admin Account
+    </div>
+
+    <div class="nav-item" onclick="showPage('audit',this)">
+      🔐 Audit Logs
+    </div>
+
+    <div class="nav-item" onclick="logout()">
+      🚪 Logout
+    </div>
+
+  </aside>
+
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <header class="header">
+
+      <div class="header-left">
+        <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+        <strong id="pageTitle">Dashboard</strong>
+      </div>
+
+      <div class="profile">
+        <span>🔔</span>
+        <div class="avatar">AS</div>
+        <span>Admin Sheikh</span>
+      </div>
+
+    </header>
+
+
+    <div class="content">
+
+      <!-- DASHBOARD -->
+      <section id="dashboard" class="page active">
+
+        <h1 class="page-title">Dashboard</h1>
+
+        <div class="stats">
+
+          <div class="stat-card">
+            <div class="stat-label">Total Users</div>
+            <div class="stat-value">12,540</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-label">Active Users</div>
+            <div class="stat-value">11,820</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-label">Blocked Users</div>
+            <div class="stat-value">720</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-label">Pending Withdrawals</div>
+            <div class="stat-value">125</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-label">Total Earned</div>
+            <div class="stat-value">৳ 845,200</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-label">Total Withdrawn</div>
+            <div class="stat-value">৳ 512,400</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-label">Today's Earnings</div>
+            <div class="stat-value">৳ 4,520</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-label">Today's Withdrawals</div>
+            <div class="stat-value">৳ 8,200</div>
+          </div>
+
+        </div>
+
+        <div class="grid-2">
+
+          <div class="card">
+            <h3>Earnings Chart</h3>
+            <div style="height:220px;display:flex;align-items:center;justify-content:center;color:#64748b">
+              📈 Earnings chart — Today / 7 Days / 30 Days
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>User Registration</h3>
+            <div style="height:220px;display:flex;align-items:center;justify-content:center;color:#64748b">
+              📊 New users over time
+            </div>
+          </div>
+
+        </div>
+
+        <div class="card">
+          <h3>Quick Actions</h3>
+
+          <div class="quick-actions">
+            <button onclick="showPage('createTask')">+ Add Task</button>
+            <button onclick="showPage('createAd')">+ Add Advertisement</button>
+            <button onclick="showPage('withdrawals')">Withdrawals</button>
+            <button onclick="showPage('users')">Manage Users</button>
+            <button onclick="showPage('telegramBot')">Telegram Settings</button>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- USERS -->
+      <section id="users" class="page">
+
+        <h1 class="page-title">Users</h1>
+
+        <div class="toolbar">
+          <div class="toolbar-left">
+            <input placeholder="Search users..." style="max-width:260px">
+            <button class="btn-small">Filter</button>
+          </div>
+
+          <button class="btn-small btn-blue">Export</button>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>User ID</th>
+                <th>Telegram ID</th>
+                <th>Username</th>
+                <th>Name</th>
+                <th>Balance</th>
+                <th>Total Earned</th>
+                <th>Status</th>
+                <th>Joined</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td>10001</td>
+                <td>784512369</td>
+                <td>@user_one</td>
+                <td>Rahim</td>
+                <td>৳520</td>
+                <td>৳2,450</td>
+                <td><span class="badge active-badge">ACTIVE</span></td>
+                <td>16 Sep 2026</td>
+                <td><button class="btn-small">View</button></td>
+              </tr>
+
+              <tr>
+                <td>10002</td>
+                <td>784512370</td>
+                <td>@user_two</td>
+                <td>Karim</td>
+                <td>৳0</td>
+                <td>৳780</td>
+                <td><span class="badge blocked-badge">BLOCKED</span></td>
+                <td>15 Sep 2026</td>
+                <td><button class="btn-small">View</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </section>
+
+
+      <!-- TASKS -->
+      <section id="tasks" class="page">
+
+        <h1 class="page-title">Manage Tasks</h1>
+
+        <div class="toolbar">
+          <input placeholder="Search tasks..." style="max-width:280px">
+          <button class="btn-small btn-blue" onclick="showPage('createTask')">
+            + Add Task
+          </button>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Task</th>
+                <th>Type</th>
+                <th>Reward</th>
+                <th>Completed</th>
+                <th>Limit</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td>Join Telegram Channel</td>
+                <td>Telegram</td>
+                <td>৳10</td>
+                <td>420</td>
+                <td>1000</td>
+                <td><span class="badge active-badge">ACTIVE</span></td>
+                <td>Edit · Pause · Archive</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </section>
+
+
+      <!-- CREATE TASK -->
+      <section id="createTask" class="page">
+
+        <h1 class="page-title">Add Task</h1>
+
+        <div class="card">
+
+          <div class="form-grid">
+
+            <div>
+              <label>Task Title</label>
+              <input placeholder="Enter task title">
+            </div>
+
+            <div>
+              <label>Task Type</label>
+              <select>
+                <option>Visit Website</option>
+                <option>Join Telegram Channel</option>
+                <option>Join Telegram Group</option>
+                <option>Open Link</option>
+                <option>Custom Task</option>
+              </select>
+            </div>
+
+            <div class="form-full">
+              <label>Description</label>
+              <textarea rows="4" placeholder="Task description"></textarea>
+            </div>
+
+            <div class="form-full">
+              <label>Task URL</label>
+              <input placeholder="https://example.com">
+            </div>
+
+            <div>
+              <label>Reward Amount</label>
+              <input type="number" placeholder="0.00">
+            </div>
+
+            <div>
+              <label>Daily Completion Limit</label>
+              <input type="number" placeholder="100">
+            </div>
+
+            <div>
+              <label>Total Completion Limit</label>
+              <input type="number" placeholder="1000">
+            </div>
+
+            <div>
+              <label>Status</label>
+              <select>
+                <option>Draft</option>
+                <option>Active</option>
+                <option>Paused</option>
+              </select>
+            </div>
+
+          </div>
+
+          <div class="actions">
+            <button class="btn btn-primary" style="width:auto" onclick="toast('Task saved')">
+              Save Task
+            </button>
+
+            <button class="btn btn-success" onclick="toast('Task activated')">
+              Save & Activate
+            </button>
+
+            <button class="btn-small" onclick="showPage('tasks')">
+              Cancel
+            </button>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ADS -->
+      <section id="ads" class="page">
+
+        <h1 class="page-title">Advertisements</h1>
+
+        <div class="toolbar">
+          <input placeholder="Search advertisements..." style="max-width:280px">
+
+          <button class="btn-small btn-blue" onclick="showPage('createAd')">
+            + Add Advertisement
+          </button>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Reward</th>
+                <th>Views</th>
+                <th>Daily Limit</th>
+                <th>Total Limit</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td>Visit Sponsor Website</td>
+                <td>৳5</td>
+                <td>4,250</td>
+                <td>500</td>
+                <td>10,000</td>
+                <td><span class="badge active-badge">ACTIVE</span></td>
+                <td>Edit · Pause · Archive</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </section>
+
+
+      <!-- CREATE AD -->
+      <section id="createAd" class="page">
+
+        <h1 class="page-title">Add Advertisement</h1>
+
+        <div class="card">
+
+          <div class="form-grid">
+
+            <div>
+              <label>Advertisement Title</label>
+              <input placeholder="Ad title">
+            </div>
+
+            <div>
+              <label>Reward Amount</label>
+              <input type="number" placeholder="0.00">
+            </div>
+
+            <div class="form-full">
+              <label>Description</label>
+              <textarea rows="3"></textarea>
+            </div>
+
+            <div class="form-full">
+              <label>Destination URL</label>
+              <input placeholder="https://example.com">
+            </div>
+
+            <div>
+              <label>View Duration (seconds)</label>
+              <input type="number" placeholder="10">
+            </div>
+
+            <div>
+              <label>Daily View Limit</label>
+              <input type="number" placeholder="500">
+            </div>
+
+            <div>
+              <label>Total View Limit</label>
+              <input type="number" placeholder="10000">
+            </div>
+
+            <div>
+              <label>Status</label>
+              <select>
+                <option>Draft</option>
+                <option>Active</option>
+                <option>Paused</option>
+              </select>
+            </div>
+
+          </div>
+
+          <div class="actions">
+            <button class="btn btn-primary" style="width:auto" onclick="toast('Advertisement saved')">
+              Save
+            </button>
+
+            <button class="btn btn-success" onclick="toast('Advertisement activated')">
+              Save & Activate
+            </button>
+
+            <button class="btn-small" onclick="showPage('ads')">
+              Cancel
+            </button>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- WITHDRAWALS -->
+      <section id="withdrawals" class="page">
+
+        <h1 class="page-title">Withdrawal Management</h1>
+
+        <div class="card">
+
+          <div class="quick-actions">
+            <button>All</button>
+            <button>Pending</button>
+            <button>Approved</button>
+            <button>Completed</button>
+            <button>Rejected</button>
+          </div>
+
+        </div>
+
+        <div class="table-wrap">
+
+          <table>
+            <thead>
+              <tr>
+                <th>Request ID</th>
+                <th>User</th>
+                <th>Username</th>
+                <th>Amount</th>
+                <th>Method</th>
+                <th>Account</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td>WD-10021</td>
+                <td>10001</td>
+                <td>@user_one</td>
+                <td>৳500</td>
+                <td>bKash</td>
+                <td>01XXXXXXXXX</td>
+                <td>16 Sep 2026</td>
+                <td><span class="badge pending-badge">PENDING</span></td>
+                <td>
+                  <button class="btn-small btn-blue" onclick="approveWithdrawal()">
+                    Review
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </section>
+
+
+      <!-- TRANSACTIONS -->
+      <section id="transactions" class="page">
+
+        <h1 class="page-title">Wallet Transactions</h1>
+
+        <div class="table-wrap">
+
+          <table>
+            <thead>
+              <tr>
+                <th>Transaction ID</th>
+                <th>User</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Balance Before</th>
+                <th>Balance After</th>
+                <th>Description</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td>TX-10001</td>
+                <td>10001</td>
+                <td>Task Reward</td>
+                <td>+৳10</td>
+                <td>৳510</td>
+                <td>৳520</td>
+                <td>Task completed</td>
+                <td>16 Sep 2026</td>
+              </tr>
+
+              <tr>
+                <td>TX-10002</td>
+                <td>10001</td>
+                <td>Withdrawal</td>
+                <td>-৳500</td>
+                <td>৳1020</td>
+                <td>৳520</td>
+                <td>Withdrawal request</td>
+                <td>16 Sep 2026</td>
+              </tr>
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </section>
+
+
+      <!-- TELEGRAM BOT -->
+      <section id="telegramBot" class="page">
+
+        <h1 class="page-title">Telegram Bot Settings</h1>
+
+        <div class="card">
+
+          <h3>Connection Status</h3>
+          <p>
+            <span class="badge active-badge">CONNECTED</span>
+          </p>
+
+        </div>
+
+        <div class="card">
+
+          <div class="form-group">
+            <label>Bot Token</label>
+            <input type="password" placeholder="••••••••••••••••">
+          </div>
+
+          <div class="form-group">
+            <label>Bot Username</label>
+            <input placeholder="@your_bot">
+          </div>
+
+          <div class="actions">
+            <button class="btn btn-primary" style="width:auto">Save</button>
+            <button class="btn-small">Test Connection</button>
+            <button class="btn-small">Set Webhook</button>
+            <button class="btn btn-danger">Remove Webhook</button>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- MINI APP -->
+      <section id="miniApp" class="page">
+
+        <h1 class="page-title">Telegram Mini App</h1>
+
+        <div class="card">
+
+          <div class="form-grid">
+
+            <div>
+              <label>Mini App Name</label>
+              <input placeholder="My Mini App">
+            </div>
+
+            <div>
+              <label>Bot Username</label>
+              <input placeholder="@your_bot">
+            </div>
+
+            <div class="form-full">
+              <label>Mini App URL</label>
+              <input placeholder="https://example.com">
+            </div>
+
+            <div class="form-full">
+              <label>Webhook URL</label>
+              <input placeholder="https://api.example.com/webhook">
+            </div>
+
+            <div>
+              <label>Environment</label>
+              <select>
+                <option>Production</option>
+                <option>Development</option>
+              </select>
+            </div>
+
+          </div>
+
+          <div class="actions">
+            <button class="btn btn-primary" style="width:auto">Save</button>
+            <button class="btn-small">Test Mini App</button>
+            <button class="btn-small">Copy Mini App URL</button>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- TELEGRAM STATUS -->
+      <section id="telegramStatus" class="page">
+
+        <h1 class="page-title">Telegram Configuration Status</h1>
+
+        <div class="stats">
+
+          <div class="stat-card">
+            <div class="stat-label">Bot Connection</div>
+            <div class="stat-value">✓</div>
+            <span class="badge active-badge">WORKING</span>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-label">Webhook</div>
+            <div class="stat-value">✓</div>
+            <span class="badge active-badge">WORKING</span>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-label">Mini App</div>
+            <div class="stat-value">✓</div>
+            <span class="badge active-badge">WORKING</span>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-label">Telegram API</div>
+            <div class="stat-value">✓</div>
+            <span class="badge active-badge">WORKING</span>
+          </div>
+
+        </div>
+
+        <div class="card">
+          Last webhook event: <strong>16 Sep 2026, 21:40</strong>
+        </div>
+
+      </section>
+
+
+      <!-- WITHDRAWAL SETTINGS -->
+      <section id="withdrawalSettings" class="page">
+
+        <h1 class="page-title">Withdrawal Settings</h1>
+
+        <div class="card">
+
+          <div class="form-grid">
+
+            <div>
+              <label>Minimum Withdrawal</label>
+              <input type="number" value="100">
+            </div>
+
+            <div>
+              <label>Maximum Withdrawal</label>
+              <input type="number" value="5000">
+            </div>
+
+            <div>
+              <label>Withdrawal Fee</label>
+              <input type="number" value="0">
+            </div>
+
+            <div>
+              <label>Processing Message</label>
+              <input value="Withdrawal is being processed.">
+            </div>
+
+          </div>
+
+          <div class="actions">
+            <button class="btn btn-primary" style="width:auto" onclick="toast('Settings saved')">
+              Save Settings
+            </button>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- GENERAL SETTINGS -->
+      <section id="generalSettings" class="page">
+
+        <h1 class="page-title">General Settings</h1>
+
+        <div class="card">
+
+          <div class="form-grid">
+
+            <div>
+              <label>Platform Name</label>
+              <input value="My Platform">
+            </div>
+
+            <div>
+              <label>Currency</label>
+              <select>
+                <option>BDT (৳)</option>
+                <option>USD ($)</option>
+              </select>
+            </div>
+
+            <div>
+              <label>Timezone</label>
+              <select>
+                <option>Asia/Dhaka</option>
+                <option>UTC</option>
+              </select>
+            </div>
+
+            <div>
+              <label>Support Telegram</label>
+              <input placeholder="@support">
+            </div>
+
+            <div>
+              <label>Maintenance Mode</label>
+              <select>
+                <option>Disabled</option>
+                <option>Enabled</option>
+              </select>
+            </div>
+
+          </div>
+
+          <div class="actions">
+            <button class="btn btn-primary" style="width:auto">
+              Save Settings
+            </button>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ACCOUNT -->
+      <section id="account" class="page">
+
+        <h1 class="page-title">Admin Account</h1>
+
+        <div class="card">
+
+          <h3>Profile</h3>
+
+          <div class="form-group">
+            <label>Admin Username</label>
+            <input value="Admin Sheikh" readonly>
+          </div>
+
+        </div>
+
+        <div class="card">
+
+          <h3>Change Password</h3>
+
+          <div class="form-group">
+            <label>Current Password</label>
+            <input type="password">
+          </div>
+
+          <div class="form-group">
+            <label>New Password</label>
+            <input type="password">
+          </div>
+
+          <div class="form-group">
+            <label>Confirm New Password</label>
+            <input type="password">
+          </div>
+
+          <button class="btn btn-primary" style="width:auto">
+            Change Password
+          </button>
+
+        </div>
+
+        <div class="card">
+
+          <h3>Security</h3>
+
+          <p style="margin-bottom:10px">
+            Last login: Today
+          </p>
+
+          <p style="margin-bottom:15px">
+            Active sessions: 1
+          </p>
+
+          <button class="btn btn-danger">
+            Logout All Sessions
+          </button>
+
+        </div>
+
+      </section>
+
+
+      <!-- AUDIT -->
+      <section id="audit" class="page">
+
+        <h1 class="page-title">Audit Logs</h1>
+
+        <div class="table-wrap">
+
+          <table>
+            <thead>
+              <tr>
+                <th>Log ID</th>
+                <th>Admin</th>
+                <th>Action</th>
+                <th>Target</th>
+                <th>Description</th>
+                <th>IP</th>
+                <th>Timestamp</th>
+              </tr>
+            </thead>
+
+            <tbody>
+
+              <tr>
+                <td>LOG-001</td>
+                <td>Admin Sheikh</td>
+                <td>ADMIN_LOGIN</td>
+                <td>Admin</td>
+                <td>Successful login</td>
+                <td>Hidden</td>
+                <td>16 Sep 2026 21:45</td>
+              </tr>
+
+              <tr>
+                <td>LOG-002</td>
+                <td>Admin Sheikh</td>
+                <td>TASK_CREATE</td>
+                <td>Task #12</td>
+                <td>New task created</td>
+                <td>Hidden</td>
+                <td>16 Sep 2026 21:47</td>
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </section>
+
+    </div>
+
+  </main>
+
+</section>
+
+
+<div id="toast" class="toast"></div>
+
+
+<script>
+/*
+  DEMO LOGIN ONLY
+
+  IMPORTANT:
+  Credentials inside client-side HTML/JS are NOT secret.
+  For production, move authentication to a backend.
+*/
+
+const ADMIN_USERNAME = "Admin Sheikh";
+const ADMIN_PASSWORD = "Salman.Sheikh.@1";
+
+const loginPage = document.getElementById("loginPage");
+const app = document.getElementById("app");
+const loginForm = document.getElementById("loginForm");
+const loginError = document.getElementById("loginError");
+const loginButton = document.getElementById("loginButton");
+
+let failedAttempts = 0;
+let lockedUntil = 0;
+
+loginForm.addEventListener("submit", function(e){
+
+  e.preventDefault();
+
+  const now = Date.now();
+
+  if(now < lockedUntil){
+    const seconds = Math.ceil((lockedUntil-now)/1000);
+    loginError.style.display = "block";
+    loginError.textContent =
+      "Too many failed attempts. Try again in " + seconds + " seconds.";
+    return;
+  }
+
+  const username =
+    document.getElementById("username").value.trim();
+
+  const password =
+    document.getElementById("password").value;
+
+  loginButton.disabled = true;
+  loginButton.textContent = "Logging in...";
+
+  setTimeout(() => {
+
+    if(
+      username === ADMIN_USERNAME &&
+      password === ADMIN_PASSWORD
+    ){
+
+      failedAttempts = 0;
+
+      loginPage.style.display = "none";
+      app.style.display = "block";
+
+      loginError.style.display = "none";
+
+    }else{
+
+      failedAttempts++;
+
+      loginError.style.display = "block";
+      loginError.textContent =
+        "Invalid username or password.";
+
+      if(failedAttempts >= 5){
+
+        lockedUntil = Date.now() + 30000;
+        failedAttempts = 0;
+
+        loginError.textContent =
+          "Too many failed attempts. Login temporarily rate-limited.";
+      }
+
+    }
+
+    loginButton.disabled = false;
+    loginButton.textContent = "Login";
+
+  },700);
+
+});
+
+
+function togglePassword(){
+
+  const password =
+    document.getElementById("password");
+
+  password.type =
+    password.type === "password"
+      ? "text"
+      : "password";
+}
+
+
+function toggleSidebar(){
+
+  document
+    .getElementById("sidebar")
+    .classList.toggle("open");
+}
+
+
+function showPage(pageId, element){
+
+  document.querySelectorAll(".page")
+    .forEach(page => page.classList.remove("active"));
+
+  const page =
+    document.getElementById(pageId);
+
+  if(page){
+    page.classList.add("active");
+  }
+
+  document.querySelectorAll(".nav-item")
+    .forEach(item => item.classList.remove("active"));
+
+  if(element){
+    element.classList.add("active");
+  }
+
+  const titles = {
+    dashboard:"Dashboard",
+    users:"Users",
+    tasks:"Manage Tasks",
+    createTask:"Add Task",
+    ads:"Advertisements",
+    createAd:"Add Advertisement",
+    withdrawals:"Withdrawals",
+    transactions:"Wallet Transactions",
+    telegramBot:"Telegram Bot Settings",
+    miniApp:"Telegram Mini App",
+    telegramStatus:"Telegram Configuration Status",
+    withdrawalSettings:"Withdrawal Settings",
+    generalSettings:"General Settings",
+    account:"Admin Account",
+    audit:"Audit Logs"
+  };
+
+  document.getElementById("pageTitle").textContent =
+    titles[pageId] || "Admin Panel";
+
+  document
+    .getElementById("sidebar")
+    .classList.remove("open");
+
+}
+
+
+function logout(){
+
+  if(confirm("Are you sure you want to logout?")){
+
+    app.style.display = "none";
+    loginPage.style.display = "flex";
+
+    document.getElementById("username").value = "";
+    document.getElementById("password").value = "";
+
+    showPage("dashboard");
+
+    toast("Logged out successfully");
+  }
+
+}
+
+
+function approveWithdrawal(){
+
+  const ok =
+    confirm(
+      "Are you sure you want to approve this withdrawal?"
+    );
+
+  if(ok){
+    toast("Withdrawal approval request submitted");
+  }
+
+}
+
+
+function toast(message){
+
+  const el =
+    document.getElementById("toast");
+
+  el.textContent = message;
+  el.style.display = "block";
+
+  setTimeout(()=>{
+    el.style.display = "none";
+  },2500);
+
+}
+</script>
+
+</body>
+</html>
